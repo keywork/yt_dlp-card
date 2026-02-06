@@ -1,7 +1,7 @@
-console.info("YT-DLP Card 0.1");
-const LitElement =
-  window.LitElement ||
-  Object.getPrototypeOf(customElements.get("hui-masonry-view"));
+console.info("YT-DLP Card 0.2.0");
+const LitElement = Object.getPrototypeOf(
+  customElements.get("ha-panel-lovelace")
+);
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
@@ -34,12 +34,12 @@ export class YTDLPCard extends LitElement {
   // The user supplied configuration. Throw an exception and Home Assistant
   // will render an error card.
   setConfig(config) {
-    if (!config.entity || config.entity !== "downloader.yt_dlp") {
-      throw new Error("You need to define downloader.yt_dlp as entity");
+    if (!config.entity || config.entity !== "yt_dlp.downloader") {
+      throw new Error("You need to define yt_dlp.downloader as entity");
     }
     this._header = config.header === "" ? nothing : config.header;
     this._colour = config.colour === "" ? "#005eff" : config.colour;
-    this._entity = config.entity === "" ? "downloader.yt_dlp" : config.entity;
+    this._entity = config.entity === "" ? "yt_dlp.downloader" : config.entity;
     // call set hass() to immediately adjust to a changed entity
     // while editing the entity in the card editor
     if (this._hass) {
@@ -246,14 +246,90 @@ export class YTDLPCard extends LitElement {
 
   static getStubConfig() {
     return {
-      entity: "downloader.yt_dlp",
+      entity: "yt_dlp.downloader",
       header: "YT-DLP Card",
       colour: "#005eff",
     };
   }
+
+  // Card editor configuration
+  static getConfigElement() {
+    return document.createElement("yt-dlp-card-editor");
+  }
 }
 
 customElements.define("yt-dlp-card", YTDLPCard);
+
+// Card Editor
+class YTDLPCardEditor extends LitElement {
+  static get properties() {
+    return {
+      hass: {},
+      _config: {},
+    };
+  }
+
+  setConfig(config) {
+    this._config = config;
+  }
+
+  configChanged(newConfig) {
+    const event = new Event("config-changed", {
+      bubbles: true,
+      composed: true,
+    });
+    event.detail = { config: newConfig };
+    this.dispatchEvent(event);
+  }
+
+  render() {
+    if (!this.hass || !this._config) {
+      return html``;
+    }
+
+    return html`
+      <div class="card-config">
+        <ha-textfield
+          label="Header (optional)"
+          .value="${this._config.header || ""}"
+          .configValue="${"header"}"
+          @input="${this._valueChanged}"
+        ></ha-textfield>
+        <ha-textfield
+          label="Entity"
+          .value="${this._config.entity || "yt_dlp.downloader"}"
+          .configValue="${"entity"}"
+          @input="${this._valueChanged}"
+        ></ha-textfield>
+        <ha-textfield
+          label="Progress Bar Color"
+          .value="${this._config.colour || "#005eff"}"
+          .configValue="${"colour"}"
+          @input="${this._valueChanged}"
+        ></ha-textfield>
+      </div>
+    `;
+  }
+
+  _valueChanged(ev) {
+    if (!this._config || !this.hass) {
+      return;
+    }
+    const target = ev.target;
+    if (this[`_${target.configValue}`] === target.value) {
+      return;
+    }
+    if (target.configValue) {
+      this._config = {
+        ...this._config,
+        [target.configValue]: target.value,
+      };
+    }
+    this.configChanged(this._config);
+  }
+}
+
+customElements.define("yt-dlp-card-editor", YTDLPCardEditor);
 
 window.customCards = window.customCards || []; // Create the list if it doesn't exist. Careful not to overwrite it
 window.customCards.push({

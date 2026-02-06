@@ -1,6 +1,8 @@
 # Home Assistant Card for use with YT-DLP
 
-The integration [`Yt_dlp_hass`](https://github.com/ybk5053/yt_dlp_hass) needs to be enabled before using the card.
+The integration [`yt_dlp_hass`](https://github.com/keywork/yt_dlp_hass) needs to be enabled before using the card.
+
+**Compatible with Home Assistant 2026.2.0+**
 
 ![image](https://raw.githubusercontent.com/ybk5053/yt_dlp-card/main/img/downloading.jpg)
 *Download info*
@@ -12,13 +14,13 @@ The integration [`Yt_dlp_hass`](https://github.com/ybk5053/yt_dlp_hass) needs to
 - Add Custom Repositories
 
 ```text
-Repository: https://github.com/ybk5053/yt_dlp-card
+Repository: https://github.com/keywork/yt_dlp-card
 Category: Lovelace
 ```
 
 ## Manual Installation
 
-- Download [yt_dlp-card.js](https://github.com/ybk5053/yt_dlp-card/blob/main/dist/yt_dlp-card.js)
+- Download [yt_dlp-card.js](https://github.com/keywork/yt_dlp-card/blob/main/dist/yt_dlp-card.js)
 - Copy to www/yt_dlp-card/
 - Add the following to your resources
 
@@ -31,4 +33,14 @@ type: Javascript Module
 
 Look for "Custom: Youtube-DLP Card" in the card list.
 
-Only the colour option should be changed. Any colour recognised by html/css.
+### Configuration Options
+- **header** (optional): Card title text
+- **entity**: Must be `yt_dlp.downloader` (default)
+- **colour**: Progress bar color (default: #005eff)
+
+## Features
+- Real-time download progress display
+- Speed and ETA information
+- Direct URL input and download trigger
+- Visual progress bars for multiple concurrent downloads
+- Card editor for easy configuration
