@@ -42,5 +42,14 @@ Look for "Custom: Youtube-DLP Card" in the card list.
 - Real-time download progress display
 - Speed and ETA information
 - Direct URL input and download trigger
+- **Playlist control**: Checkbox to download entire playlists (default: single video only)
 - Visual progress bars for multiple concurrent downloads
 - Card editor for easy configuration
+
+## Usage
+1. Paste a video URL into the input field
+2. **Optional**: Check "Download entire playlist" if the URL contains a playlist and you want all videos
+3. Click the download arrow button
+4. Monitor progress in real-time
+
+**Note**: By default, only the specific video is downloaded, even if the URL contains a playlist. This prevents accidentally downloading hundreds of videos.

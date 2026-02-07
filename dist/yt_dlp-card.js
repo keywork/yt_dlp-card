@@ -1,4 +1,4 @@
-console.info("YT-DLP Card 0.2.0");
+console.info("YT-DLP Card 0.3.0");
 const LitElement = Object.getPrototypeOf(
   customElements.get("ha-panel-lovelace")
 );
@@ -223,7 +223,10 @@ export class YTDLPCard extends LitElement {
               class="clear"
               aria-label="Clear input"
               @click="${() =>
-                this._download(this.shadowRoot.getElementById("durl").value)}"
+                this._download(
+                  this.shadowRoot.getElementById("durl").value,
+                  this.shadowRoot.getElementById("playlist").checked
+                )}"
             >
               <svg viewBox="0 0 16 16" width="12" height="12">
                 <path
@@ -235,13 +238,32 @@ export class YTDLPCard extends LitElement {
               </svg>
             </button>
           </div>
+
+          <div class="rows" style="margin-top: 10px;">
+            <label>
+              <input
+                type="checkbox"
+                id="playlist"
+                style="margin-right: 5px;"
+              />
+              Download entire playlist (if URL contains playlist)
+            </label>
+          </div>
         </div>
       </ha-card>
     `;
   }
 
-  _download(url) {
-    this._hass.callService("yt_dlp", "download", { url: url });
+  _download(url, downloadPlaylist) {
+    const serviceData = { url: url };
+    
+    // If user wants to download playlist, set noplaylist to false
+    if (downloadPlaylist) {
+      serviceData.noplaylist = false;
+    }
+    // Otherwise, use default (noplaylist: true from integration)
+    
+    this._hass.callService("yt_dlp", "download", serviceData);
   }
 
   static getStubConfig() {
