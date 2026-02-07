@@ -4,9 +4,9 @@ The integration [`yt_dlp_hass`](https://github.com/keywork/yt_dlp_hass) needs to
 
 **Compatible with Home Assistant 2026.2.0+**
 
-![image](https://raw.githubusercontent.com/ybk5053/yt_dlp-card/main/img/downloading.jpg)
+![image](https://raw.githubusercontent.com/keywork/yt_dlp-card/main/img/downloading.jpg)
 *Download info*
-![image](https://raw.githubusercontent.com/ybk5053/yt_dlp-card/main/img/waiting.jpg)
+![image](https://raw.githubusercontent.com/keywork/yt_dlp-card/main/img/waiting.jpg)
 *Empty  Card*
 
 ## HACS
