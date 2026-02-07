@@ -34,12 +34,12 @@ export class YTDLPCard extends LitElement {
   // The user supplied configuration. Throw an exception and Home Assistant
   // will render an error card.
   setConfig(config) {
-    if (!config.entity || config.entity !== "yt_dlp.downloader") {
-      throw new Error("You need to define yt_dlp.downloader as entity");
+    if (!config.entity || config.entity !== "sensor.yt_dlp_downloader") {
+      throw new Error("You need to define sensor.yt_dlp_downloader as entity");
     }
     this._header = config.header === "" ? nothing : config.header;
     this._colour = config.colour === "" ? "#005eff" : config.colour;
-    this._entity = config.entity === "" ? "yt_dlp.downloader" : config.entity;
+    this._entity = config.entity === "" ? "sensor.yt_dlp_downloader" : config.entity;
     // call set hass() to immediately adjust to a changed entity
     // while editing the entity in the card editor
     if (this._hass) {
@@ -246,7 +246,7 @@ export class YTDLPCard extends LitElement {
 
   static getStubConfig() {
     return {
-      entity: "yt_dlp.downloader",
+      entity: "sensor.yt_dlp_downloader",
       header: "YT-DLP Card",
       colour: "#005eff",
     };
@@ -297,7 +297,7 @@ class YTDLPCardEditor extends LitElement {
         ></ha-textfield>
         <ha-textfield
           label="Entity"
-          .value="${this._config.entity || "yt_dlp.downloader"}"
+          .value="${this._config.entity || "sensor.yt_dlp_downloader"}"
           .configValue="${"entity"}"
           @input="${this._valueChanged}"
         ></ha-textfield>
