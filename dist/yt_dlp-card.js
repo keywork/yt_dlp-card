@@ -1,4 +1,4 @@
-console.info("YT-DLP Card 0.3.0");
+console.info("YT-DLP Card 0.3.2");
 const LitElement = Object.getPrototypeOf(
   customElements.get("ha-panel-lovelace")
 );
@@ -173,6 +173,11 @@ export class YTDLPCard extends LitElement {
   render() {
     let items = [];
     for (const [k, v] of Object.entries(this._state.attributes)) {
+      // Skip non-download attributes (friendly_name, etc.)
+      if (typeof v !== 'object' || !v.hasOwnProperty('speed') || !v.hasOwnProperty('downloaded')) {
+        continue;
+      }
+      
       let speed = formatBytes(v["speed"]);
       let percent = 100;
       if (v["total"] != "Nan") {
@@ -225,7 +230,8 @@ export class YTDLPCard extends LitElement {
               @click="${() =>
                 this._download(
                   this.shadowRoot.getElementById("durl").value,
-                  this.shadowRoot.getElementById("playlist").checked
+                  this.shadowRoot.getElementById("playlist").checked,
+                  this.shadowRoot.getElementById("audio_only").checked
                 )}"
             >
               <svg viewBox="0 0 16 16" width="12" height="12">
@@ -249,12 +255,23 @@ export class YTDLPCard extends LitElement {
               Download entire playlist (if URL contains playlist)
             </label>
           </div>
+
+          <div class="rows" style="margin-top: 10px;">
+            <label>
+              <input
+                type="checkbox"
+                id="audio_only"
+                style="margin-right: 5px;"
+              />
+              Audio only (convert to MP3)
+            </label>
+          </div>
         </div>
       </ha-card>
     `;
   }
 
-  _download(url, downloadPlaylist) {
+  _download(url, downloadPlaylist, audioOnly) {
     const serviceData = { url: url };
     
     // If user wants to download playlist, set noplaylist to false
@@ -262,6 +279,11 @@ export class YTDLPCard extends LitElement {
       serviceData.noplaylist = false;
     }
     // Otherwise, use default (noplaylist: true from integration)
+    
+    // If user wants audio only, set audio_only to true
+    if (audioOnly) {
+      serviceData.audio_only = true;
+    }
     
     this._hass.callService("yt_dlp", "download", serviceData);
   }
